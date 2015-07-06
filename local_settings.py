@@ -1,0 +1,1 @@
+SECRET_KEY = 'OPFIN34154&&^$vjnnuid'

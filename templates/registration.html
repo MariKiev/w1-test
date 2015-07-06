@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Registration</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/all_css.css">
+</head>
+<body>
+	<div class='container'>
+		<div><h1><b>Форма регистрации</b></h1></div>
+			<form method='POST'>
+				{{ form.csrf_token }}
+				<div class="form-group">
+					{% if form.username.flags.required %}
+						<span class="error">*</span>
+					{% endif %}
+		            {{ form.username.label }}
+		            {{ form.username(class='form-control') }}
+		            {% if form.errors.username %}
+		                {%  for error in form.errors.userame %}
+		                    <span class="error">{{ error }}</span>
+		                    <br>
+		                {% endfor %}
+		            {% endif %}
+	            </div>
+	            <div class="form-group">
+		            {% if form.email.flags.required %}
+		            	<span class="error">*</span>
+		            {% endif %}
+		            {{ form.email.label }}
+		            {{ form.email(class="form-control", id="exampleInputEmail1", placeholder="Enter email") }}
+		            {% if form.errors.email %}
+		                {% for error in form.errors.email %}
+		                    <span class="error">{{ error }}</span>
+		                    <br>
+		                {%  endfor %}
+		            {% endif %}
+        		</div>
+        		<div class="form-group">
+		            {% if form.password.flags.required %}
+		            	<span class="error">*</span>
+		            {% endif %}
+		            {{ form.password.label }}
+		            {{ form.password(class="form-control", id="exampleInputPassword1", placeholder="Password") }}
+		            {% if form.errors.password %}
+		                {% for error in form.errors.password %}
+		                    <span class="error">{{ error }}</span>
+		                    <br>
+		                {% endfor %}
+		            {% endif %}
+		        </div>
+		        <div class="form-group">
+		            {% if form.check_password.flags.required %}
+		            	<span class="error">*</span>
+		            {% endif %}
+		            {{ form.check_password.label }}
+		            {{ form.check_password(class="form-control", id="exampleInputPassword1", placeholder="Confirm your password") }}
+		            {% if form.errors.check_password %}
+		                {% for error in form.errors.check_password %}
+		                    <span class="error">{{ error }}</span>
+		                    <br>
+		                {% endfor %}
+		            {% endif %}
+		        </div>
+		        <div class="form-group">
+		        	{% if form.phone_number.flags.required %}
+		        		<span class="error">*</span>
+		        	{% endif %}
+		        	{{ form.phone_number.label }}
+		        	{{ form.phone_number(class="form-control") }}
+		        	{% if form.errors.phone_number %}
+		        		{% for error in form.errors.phone_number %}
+		        		    <span class="error">{{ error }}</span>
+		                    <br>
+		                {% endfor %}
+		            {% endif %}
+		        </div>
+		        <div class="checkbox">
+		            <label>
+		                 {{  form.pets }}
+		                <input type="checkbox">Есть домашние животные
+		            </label>
+		        </div>
+		        <button type="submit" class="btn btn-default">Submit</button>
+			</form>
+	</div>
+</body>
+</html>
