@@ -28,7 +28,10 @@ def create_user(username, email, password, phone_number, pets):
         'phone_number': phone_number,
         'pets': pets
         })
-    return click.echo(json.loads(response.text))
+    if response.ok:
+        click.echo(json.loads(response.text))
+    else: 
+        click.echo(response.text)
 
 client.add_command(get_user)
 client.add_command(create_user)
