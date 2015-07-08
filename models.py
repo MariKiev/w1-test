@@ -20,3 +20,12 @@ class User(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def to_dictionary(self):
+        return {
+            'name': self.username,
+            'email': self.email,
+            'phone_number': self.phone_number,
+            'pets': self.pets,
+            'registration_time': str(self.registration_time)
+        }

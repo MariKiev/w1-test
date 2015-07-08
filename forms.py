@@ -3,7 +3,7 @@ from flask.ext.wtf import Form
 from wtforms import StringField, IntegerField, PasswordField, BooleanField
 from flask_wtf.html5 import EmailField
 from wtforms_components import PhoneNumberField
-from wtforms.validators import *
+from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class RegistrationForm(Form):

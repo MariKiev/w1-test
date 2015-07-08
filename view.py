@@ -1,21 +1,22 @@
 # coding=utf-8
-from app import app
-from flask import render_template, flash, abort, request
+from app import app, db
+from flask import render_template, flash, abort, request, jsonify
 from datetime import datetime
-from forms import *
-from models import *
-import json
+from forms import RegistrationForm
+from models import User
 
+def create_and_safe_user(username, email,npassword, phone_number, pets):
+    user = User(username, email,npassword, phone_number, pets)
+    user.registration_time = datetime.now()
+    db.session.add(user)
+    db.session.commit()
 
 @app.route('/', methods=['GET', 'POST'])
 def registration():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(form.username.data, form.email.data, 
+        create_and_safe_user(form.username.data, form.email.data, 
             form.password.data, form.phone_number.data, form.pets.data)
-        user.registration_time = datetime.now()
-        db.session.add(user)
-        db.session.commit()
         return "Регистрация прошла успешна"
     return render_template('registration.html', form=form)
 
@@ -25,13 +26,10 @@ def api_registration():
     if request.method == 'POST':
         form = RegistrationForm(csrf_enabled=False)
         if form.validate_on_submit():
-            user = User(form.username.data, form.email.data, 
+            create_and_safe_user(form.username.data, form.email.data, 
                 form.password.data, form.phone_number.data, form.pets.data)
-            user.registration_time = datetime.now().isoformat()
-            db.session.add(user)
-            db.session.commit()
             return redirect(url_for('get_user', id=user.id))
-        return json.dumps(form.errors)
+        return jsonify(form.errors)
     else:
         query = User.query
         if request.args.get('email'):
@@ -42,28 +40,14 @@ def api_registration():
         users = query.all()
         all_users = []
         for user in users:
-            i = {
-                'name': user.username,
-                'email': user.email,
-                'phone_number': user.phone_number,
-                'pets': user.pets,
-                'registration_time': str(user.registration_time)
-            }
-            all_users.append(i)
-        return json.dumps(all_users)
+            all_users.append(user.to_dictionary())
+        return jsonify(results=all_users)
 
 
 @app.route('/api/users/<id>', methods=['GET'])
 def get_user(id):
     user = User.query.filter_by(id=id).first()
     if user:
-        user_dict = {
-        'name': user.username,
-        'email': user.email,
-        'phone_number': user.phone_number,
-        'pets': user.pets,
-        'registration_time': str(user.registration_time)
-        }
-        return json.dumps(user_dict)
+        return jsonify(user.to_dictionary())
     else:
         return abort(404)
