@@ -6,7 +6,7 @@ from wtforms_components import PhoneNumberField
 from wtforms.validators import DataRequired, Length, EqualTo
 
 
-class RegistrationForm(Form):
+class BaseForm(Form):
     username = StringField(u'Имя', validators=[
         DataRequired(message=u'Заполнение данного поля обязательно'), 
         Length(min=1, max=20, message=u'Заполнение данного поля обязательно')
@@ -14,6 +14,14 @@ class RegistrationForm(Form):
     email = EmailField('Email', validators=[
         DataRequired(message=u'Заполнение данного поля обязательно')
         ])
+    phone_number = StringField(u'Номер телефона',validators=[
+        DataRequired(message=u'Заполнение данного поля обязательно'),
+        Length(min=10, max=13, message=u'Введите корректный номер телефона')
+        ])
+    pets = BooleanField(u'Домашние животные')
+
+
+class WebRegistration(BaseForm):
     password = PasswordField(u'Пароль', validators=[
         DataRequired(message=u'Заполнение данного поля обязательно'), 
         Length(min=6, max=15, message=u'Введите не менее 6 символов'), 
@@ -22,8 +30,10 @@ class RegistrationForm(Form):
     check_password = PasswordField(u'Подтверждение пароля', validators=[
         DataRequired(message=u'Заполнение данного поля обязательно')
         ])
-    phone_number = StringField(u'Номер телефона',validators=[
-        DataRequired(message=u'Заполнение данного поля обязательно'),
-        Length(min=10, max=13, message=u'Введите корректный номер телефона')
+
+class ApiRegistration(BaseForm):
+    password = PasswordField(u'Пароль', validators=[
+        DataRequired(message=u'Заполнение данного поля обязательно'), 
+        Length(min=6, max=15, message=u'Введите не менее 6 символов')
         ])
-    pets = BooleanField(u'Домашние животные')
+
