@@ -1,21 +1,22 @@
 # coding=utf-8
 from app import app, db
-from flask import render_template, flash, abort, request, jsonify
+from flask import render_template, flash, abort, request, jsonify, redirect, url_for
 from datetime import datetime
 from forms import WebRegistration, ApiRegistration
 from models import User
 
-def create_and_safe_user(username, email, password, phone_number, pets):
+def create_and_save_user(username, email, password, phone_number, pets):
     user = User(username, email, password, phone_number, pets)
     user.registration_time = datetime.now()
     db.session.add(user)
     db.session.commit()
+    return user
 
 @app.route('/', methods=['GET', 'POST'])
 def registration():
     form = WebRegistration()
     if form.validate_on_submit():
-        create_and_safe_user(form.username.data, form.email.data, 
+        create_and_save_user(form.username.data, form.email.data, 
             form.password.data, form.phone_number.data, form.pets.data)
         return "Регистрация прошла успешна"
     return render_template('registration.html', form=form)
@@ -26,7 +27,7 @@ def api_registration():
     if request.method == 'POST':
         form = ApiRegistration(csrf_enabled=False)
         if form.validate_on_submit():
-            create_and_safe_user(form.username.data, form.email.data, 
+            user = create_and_save_user(form.username.data, form.email.data, 
                 form.password.data, form.phone_number.data, form.pets.data)
             return redirect(url_for('get_user', id=user.id))
         return jsonify(form.errors)
