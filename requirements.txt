@@ -18,3 +18,4 @@ WTForms==2.0.2
 WTForms-Components==0.9.7
 gunicorn
 psycopg2
+click

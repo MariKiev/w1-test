@@ -11,7 +11,7 @@ def client():
 def get_user(id):
     response = requests.get('https://w1-test.herokuapp.com/api/users/%s' % id)
     if response.ok:
-        click.echo(json.loads(response.text))
+        click.echo(response.json())
     else:
         click.echo('No user')
 
@@ -29,7 +29,7 @@ def create_user(username, email, password, phone_number, pets):
         'pets': pets
         })
     if response.ok:
-        click.echo(json.loads(response.text))
+        click.echo(response.json())
     else: 
         click.echo(response.text)
 
